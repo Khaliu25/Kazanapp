@@ -2,47 +2,50 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Казань Квест Радар</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Казань Квест Радар 🧭</h1>
-        <p id="app-subtitle" class="subtitle">Шаг 4: Награда за поиск</p>
+        <h1 id="secret-title">KAZAN RADAR</h1>
+        <p id="app-subtitle" class="subtitle">Ищи городские аномалии</p>
         
         <div id="radar-card" class="card">
-            <p id="status-text">Готов к поиску приключений в Казани?</p>
+            <p id="status-text">Готов к поиску приключений?</p>
             
             <div id="quest-zone" class="hidden">
-                <p class="distance-label">Расстояние до секретной цели:</p>
-                <p id="distance-val"><span id="meters">---</span> метров</p>
-                
-                <div class="compass-container">
-                    <div id="compass-arrow">▲</div>
+                <div class="distance-box">
+                    <span class="distance-label">ДИСТАНЦИЯ</span>
+                    <p id="distance-val"><span id="meters">---</span> м</p>
                 </div>
-                <p class="hint">Иди так, чтобы метры уменьшались!</p>
+                
+                <div class="radar-circle">
+                    <div class="radar-line"></div>
+                    <div id="compass-arrow" class="needle"></div>
+                </div>
+                <p class="hint">Двигайся так, чтобы расстояние сокращалось</p>
             </div>
         </div>
 
         <div id="unlock-zone" class="card success-card hidden">
-            <div class="badge">Локация открыта! 🎉</div>
-            <h2 id="venue-name">Название заведения</h2>
+            <div class="badge">ЛОКАЦИЯ ОТКРЫТА 🎉</div>
+            <h2 id="venue-name">Название</h2>
             
             <div class="venue-image-placeholder">
-                <span>📸 Фото заведения появится тут</span>
+                <span class="lock-icon">🔓</span>
             </div>
 
             <div class="recommendation-box">
-                <h4>Что заказать:</h4>
-                <p id="venue-rec">Тут будет рекомендация...</p>
+                <h4>ИНСАЙДЕРСКИЙ СОВЕТ:</h4>
+                <p id="venue-rec">...</p>
             </div>
-            <p class="achievement-text">🗺️ Карта Казани разблокирована в этой точке!</p>
+            <p class="achievement-text">🗺️ +1 открытая зона в твоей Казани</p>
         </div>
 
-        <button id="action-btn">Найти случайное место</button>
+        <button id="action-btn">СКАНИРОВАТЬ МЕСТНОСТЬ</button>
         
-        <button id="cheat-btn" class="hidden">⚡ Симулировать приближение (чит)</button>
+        <button id="cheat-btn" class="cheat-hidden">⚡ СИМУЛЯЦИЯ АНЛОКА</button>
     </div>
 
     <script src="app.js"></script>

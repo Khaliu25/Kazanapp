@@ -23,9 +23,12 @@ let currentTarget = null;
 let userLocation = null;
 let targetBearing = 0;
 
-// Элементы UI
+// Переменные для секретного клика
+let titleClickCount = 0;
+
 const actionBtn = document.getElementById('action-btn');
 const cheatBtn = document.getElementById('cheat-btn');
+const secretTitle = document.getElementById('secret-title');
 const statusText = document.getElementById('status-text');
 const questZone = document.getElementById('quest-zone');
 const radarCard = document.getElementById('radar-card');
@@ -33,8 +36,6 @@ const unlockZone = document.getElementById('unlock-zone');
 const metersSpan = document.getElementById('meters');
 const compassArrow = document.getElementById('compass-arrow');
 const appSubtitle = document.getElementById('app-subtitle');
-
-// Элементы экрана анлока
 const venueNamePop = document.getElementById('venue-name');
 const venueRecPop = document.getElementById('venue-rec');
 
@@ -43,8 +44,7 @@ function getDistanceInMeters(lat1, lon1, lat2, lon2) {
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
     const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    return Math.round(R * c);
+    return Math.round(R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))));
 }
 
 function getBearing(lat1, lon1, lat2, lon2) {
@@ -53,22 +53,19 @@ function getBearing(lat1, lon1, lat2, lon2) {
     const lat2Rad = lat2 * Math.PI / 180;
     const y = Math.sin(dLon) * Math.cos(lat2Rad);
     const x = Math.cos(lat1Rad) * Math.sin(lat2Rad) - Math.sin(lat1Rad) * Math.cos(lat2Rad) * Math.cos(dLon);
-    let brng = Math.atan2(y, x) * 180 / Math.PI;
-    return (brng + 360) % 360;
+    return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
 }
 
-// Функция, которая вызывается, когда пользователь пришел на место
 function unlockVenue() {
-    radarCard.classList.add('hidden');    // Прячем радар
-    actionBtn.classList.add('hidden');    // Прячем главную кнопку
-    cheatBtn.classList.add('hidden');     // Прячем чит-кнопку
+    radarCard.classList.add('hidden');
+    actionBtn.classList.add('hidden');
+    cheatBtn.className = "cheat-hidden"; // Прячем чит-кнопку при успехе
     
-    // Заполняем карточку заведения данными
     venueNamePop.innerText = currentTarget.name;
     venueRecPop.innerText = currentTarget.recommendation;
     
-    appSubtitle.innerText = "Цель достигнута! Прогулка завершена.";
-    unlockZone.classList.remove('hidden'); // Показываем экран триумфа
+    appSubtitle.innerText = "Сканирование завершено";
+    unlockZone.classList.remove('hidden');
 }
 
 function initCompass() {
@@ -91,9 +88,19 @@ function handleOrientation(event) {
     }
 }
 
-// Главная кнопка
+// ЛОГИКА СЕКРЕТНОГО РЕЖИМА (ПАСХАЛКА)
+secretTitle.addEventListener('click', () => {
+    titleClickCount++;
+    if (titleClickCount === 5) {
+        // Если кликнули 5 раз, показываем чит-кнопку
+        cheatBtn.className = "cheat-visible";
+        statusText.innerText = "Режим разработчика активирован ⚡";
+        titleClickCount = 0; // Сбрасываем счетчик
+    }
+});
+
 actionBtn.addEventListener('click', () => {
-    statusText.innerText = "Обновляю данные радара...";
+    statusText.innerText = "Считываю частоты GPS...";
     initCompass();
 
     navigator.geolocation.getCurrentPosition((position) => {
@@ -102,7 +109,7 @@ actionBtn.addEventListener('click', () => {
         if (!currentTarget) {
             const randomIndex = Math.floor(Math.random() * VENUES.length);
             currentTarget = VENUES[randomIndex];
-            cheatBtn.classList.remove('hidden'); // Показываем чит-кнопку разработчика
+            console.log("Цель:", currentTarget.name);
         }
 
         const distance = getDistanceInMeters(userLocation.lat, userLocation.lng, currentTarget.lat, currentTarget.lng);
@@ -110,24 +117,20 @@ actionBtn.addEventListener('click', () => {
         compassArrow.style.transform = `rotate(${targetBearing}deg)`;
         metersSpan.innerText = distance;
 
-        // ПРОВЕРКА: Если подошли вплотную (меньше 20 метров) — анлок!
         if (distance <= 20) {
             unlockVenue();
         } else {
-            statusText.innerText = "Радар активен. Цель где-то впереди.";
+            statusText.innerText = "Сигнал стабильный. Объект запеленгован.";
             questZone.classList.remove('hidden');
-            actionBtn.innerText = "Обновить расстояние";
+            actionBtn.innerText = "ОБНОВИТЬ ДАННЫЕ";
         }
 
     }, (error) => {
-        statusText.innerText = "Ошибка GPS.";
+        statusText.innerText = "Ошибка спутника.";
         console.error(error);
     });
 });
 
-// Логика чит-кнопки (симуляция успеха)
 cheatBtn.addEventListener('click', () => {
-    if (currentTarget) {
-        unlockVenue();
-    }
+    if (currentTarget) unlockVenue();
 });
