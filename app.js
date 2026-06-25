@@ -176,10 +176,8 @@ const VENUES = [
 ];
 
 let currentTarget = null;
-let userLocation = null;
 let targetBearing = 0;
-
-// Переменные для секретного клика
+let watchId = null; // ID процесса слежения за GPS
 let titleClickCount = 0;
 
 const actionBtn = document.getElementById('action-btn');
@@ -213,9 +211,11 @@ function getBearing(lat1, lon1, lat2, lon2) {
 }
 
 function unlockVenue() {
+    if (watchId) navigator.geolocation.clearWatch(watchId); // Останавливаем слежку за GPS
+    
     radarCard.classList.add('hidden');
     actionBtn.classList.add('hidden');
-    cheatBtn.className = "cheat-hidden"; // Прячем чит-кнопку при успехе
+    cheatBtn.className = "cheat-hidden";
     
     venueNamePop.innerText = currentTarget.name;
     venueRecPop.innerText = currentTarget.recommendation;
@@ -244,23 +244,32 @@ function handleOrientation(event) {
     }
 }
 
-// ЛОГИКА СЕКРЕТНОГО РЕЖИМА (ПАСХАЛКА)
+// Пасхалка разработчика
 secretTitle.addEventListener('click', () => {
     titleClickCount++;
     if (titleClickCount === 5) {
-        // Если кликнули 5 раз, показываем чит-кнопку
         cheatBtn.className = "cheat-visible";
         statusText.innerText = "Режим разработчика активирован ⚡";
-        titleClickCount = 0; // Сбрасываем счетчик
+        titleClickCount = 0;
     }
 });
 
+// Кнопка теперь НАЧИНАЕТ СЛЕЖКУ и больше не меняет текст на обновление
 actionBtn.addEventListener('click', () => {
-    statusText.innerText = "Считываю частоты GPS...";
+    if (watchId) return; // Если уже следим, ничего не делаем
+
+    statusText.innerText = "Включение радара...";
     initCompass();
 
-    navigator.geolocation.getCurrentPosition((position) => {
-        userLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
+    // Опции для максимальной точности GPS на улице
+    const geoOptions = {
+        enableHighAccuracy: true, // Включает максимальную точность (активирует полноценный GPS, а не вышки связи)
+        maximumAge: 0            // Не использовать кэшированные старые координаты
+    };
+
+    // ГЛАВНЫЙ АПГРЕЙД: Запускаем постоянное наблюдение
+    watchId = navigator.geolocation.watchPosition((position) => {
+        const userLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
 
         if (!currentTarget) {
             const randomIndex = Math.floor(Math.random() * VENUES.length);
@@ -270,21 +279,24 @@ actionBtn.addEventListener('click', () => {
 
         const distance = getDistanceInMeters(userLocation.lat, userLocation.lng, currentTarget.lat, currentTarget.lng);
         targetBearing = getBearing(userLocation.lat, userLocation.lng, currentTarget.lat, currentTarget.lng);
+        
+        // На ПК стрелка сразу прыгнет на цель
         compassArrow.style.transform = `rotate(${targetBearing}deg)`;
         metersSpan.innerText = distance;
 
         if (distance <= 20) {
             unlockVenue();
         } else {
-            statusText.innerText = "Сигнал стабильный. Объект запеленгован.";
+            statusText.innerText = "Радар активен. Координаты обновляются на лету.";
             questZone.classList.remove('hidden');
-            actionBtn.innerText = "ОБНОВИТЬ ДАННЫЕ";
+            actionBtn.innerText = "РАДАР АКТИВИРОВАН";
+            actionBtn.style.opacity = "0.6"; // Слегка приглушим кнопку, показывая, что она уже делает свою работу
         }
 
     }, (error) => {
         statusText.innerText = "Ошибка спутника.";
         console.error(error);
-    });
+    }, geoOptions);
 });
 
 cheatBtn.addEventListener('click', () => {
