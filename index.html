@@ -3,49 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Казань Квест Радар</title>
+    <title>KZN RADAR // Стрит-Гид</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1 id="secret-title">KAZAN RADAR</h1>
-        <p id="app-subtitle" class="subtitle">Ищи городские аномалии</p>
+        <!-- Клик сюда 5 раз всё еще активирует читы -->
+        <h1 id="secret-title">КАНТАРГА?</h1>
+        <p id="app-subtitle" class="subtitle">Уличный радар по нетипичной Казани</p>
         
+        <!-- ЭКРАН ПОИСКА -->
         <div id="radar-card" class="card">
-            <p id="status-text">Готов к поиску приключений?</p>
+            <div class="card-header">СИСТЕМА НАВЕДЕНИЯ</div>
+            <p id="status-text">Жми кнопку внизу, чтобы запеленговать случайный спот.</p>
             
             <div id="quest-zone" class="hidden">
                 <div class="distance-box">
-                    <span class="distance-label">ДИСТАНЦИЯ</span>
-                    <p id="distance-val"><span id="meters">---</span> м</p>
+                    <span class="distance-label">ОСТАЛОСЬ ПРОЙТИ:</span>
+                    <p id="distance-val"><span id="meters">---</span> МЕТРОВ</p>
                 </div>
                 
+                <!-- Бруталистский радар-мишень -->
                 <div class="radar-circle">
-                    <div class="radar-line"></div>
+                    <div class="crosshair-h"></div>
+                    <div class="crosshair-v"></div>
                     <div id="compass-arrow" class="needle"></div>
                 </div>
-                <p class="hint">Двигайся так, чтобы расстояние сокращалось</p>
+                <p class="hint">Стрелка должна смотреть строго вверх. Шевели ногами!</p>
             </div>
         </div>
 
+        <!-- ЭКРАН УСПЕШНОГО АНЛОКА -->
         <div id="unlock-zone" class="card success-card hidden">
-            <div class="badge">ЛОКАЦИЯ ОТКРЫТА 🎉</div>
-            <h2 id="venue-name">Название</h2>
+            <div class="badge">ЛОКАЦИЯ НАЙДЕНА ⚡</div>
+            <h2 id="venue-name">Название заведения</h2>
             
             <div class="venue-image-placeholder">
-                <span class="lock-icon">🔓</span>
+                <span class="lock-icon">🎯</span>
             </div>
 
             <div class="recommendation-box">
                 <h4>ИНСАЙДЕРСКИЙ СОВЕТ:</h4>
                 <p id="venue-rec">...</p>
             </div>
-            <p class="achievement-text">🗺️ +1 открытая зона в твоей Казани</p>
+            <p class="achievement-text">[✓] Точка разблокирована на твоей ментальной карте</p>
         </div>
 
-        <button id="action-btn">СКАНИРОВАТЬ МЕСТНОСТЬ</button>
+        <button id="action-btn">ЗАПУСТИТЬ СКАНИРОВАНИЕ</button>
         
-        <button id="cheat-btn" class="cheat-hidden">⚡ СИМУЛЯЦИЯ АНЛОКА</button>
+        <!-- Скрытая чит-кнопка в бруталистском стиле -->
+        <button id="cheat-btn" class="cheat-hidden">⚡ СИМУЛИРОВАТЬ АНЛОК</button>
     </div>
 
     <script src="app.js"></script>

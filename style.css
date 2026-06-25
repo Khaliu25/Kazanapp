@@ -1,16 +1,19 @@
 :root {
-    --tg-theme-bg-color: #0d0e12;
-    --accent-color: #00ffcc; /* Неоновый бирюзовый */
-    --success-color: #39ff14; /* Неоновый зеленый */
-    --card-bg: #161820;
+    --bg-color: #F1F2F6; /* Цвет свежего городского бетона */
+    --black: #000000;
+    --white: #FFFFFF;
+    --accent: #FFDE4D; /* Дерзкий уличный желтый */
+    --success: #39ff14; /* Кислотно-зеленый для победы */
+    --shadow: 6px 6px 0px #000000; /* Жесткая бруталистская тень */
 }
 
 body {
     margin: 0;
     padding: 0;
-    background-color: var(--tg-theme-bg-color);
-    color: #ffffff;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--black);
+    font-family: 'Courier New', Courier, monospace; /* Журнальный/газетный шрифт */
+    font-weight: bold;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -24,192 +27,196 @@ body {
 }
 
 h1 {
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 900;
-    letter-spacing: 2px;
-    margin-bottom: 5px;
-    color: #ffffff;
-    text-shadow: 0 0 10px rgba(255,255,255,0.1);
+    text-transform: uppercase;
+    margin: 0 0 5px 0;
+    letter-spacing: -1px;
+    color: var(--black);
 }
 
 .subtitle {
-    color: #63687b;
-    font-size: 13px;
+    color: #555;
+    font-size: 12px;
     text-transform: uppercase;
-    letter-spacing: 1px;
     margin-bottom: 25px;
+    border-bottom: 2px solid var(--black);
+    padding-bottom: 5px;
 }
 
+/* Карточки в виде жестких плашек с толстым контуром */
 .card {
-    background-color: var(--card-bg);
-    border-radius: 24px;
-    padding: 25px;
+    background: var(--white);
+    border: 3px solid var(--black);
+    box-shadow: var(--shadow);
+    padding: 20px;
     margin-bottom: 25px;
-    border: 1px solid #242736;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    position: relative;
+    text-align: left;
 }
 
-/* Стилизация нового радара */
+.card-header {
+    background: var(--black);
+    color: var(--white);
+    padding: 4px 8px;
+    font-size: 11px;
+    display: inline-block;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+/* Радар-мишень */
 .radar-circle {
-    width: 160px;
-    height: 160px;
-    border: 2px solid rgba(0, 255, 204, 0.2);
+    width: 150px;
+    height: 150px;
+    border: 3px solid var(--black);
     border-radius: 50%;
     margin: 20px auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     position: relative;
-    background: radial-gradient(circle, #1a1d29 0%, #0d0e12 100%);
-    box-shadow: 0 0 20px rgba(0, 255, 204, 0.05);
+    background: var(--white);
+    overflow: hidden;
 }
 
-/* Вращающаяся фоновая линия как на настоящем радаре */
-.radar-line {
+/* Перекрестие прицела */
+.crosshair-h, .crosshair-v {
     position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: conic-gradient(from 0deg, rgba(0, 255, 204, 0.15) 0deg, transparent 90deg);
-    animation: rotateRadar 4s linear infinite;
+    background: rgba(0, 0, 0, 0.15);
 }
+.crosshair-h { width: 100%; height: 2px; top: 50%; left: 0; transform: translateY(-50%); }
+.crosshair-v { height: 100%; width: 2px; left: 50%; top: 0; transform: translateX(-50%); }
 
-@keyframes rotateRadar {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-/* Красивая стрелка-игла */
+/* Жирная массивная стрелка компаса */
 .needle {
-    width: 6px;
-    height: 70px;
-    background: linear-gradient(to top, transparent 20%, var(--accent-color) 100%);
+    width: 12px;
+    height: 60px;
+    background: var(--black);
     position: absolute;
     bottom: 50%;
+    left: calc(50% - 6px);
     transform-origin: bottom center;
-    border-radius: 4px;
-    box-shadow: 0 0 12px var(--accent-color);
-    z-index: 2;
-    transition: transform 0.2s ease-out;
-}
-
-.distance-box {
-    margin-bottom: 10px;
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%); /* Делает из прямоугольника четкий треугольник */
+    z-index: 5;
+    transition: transform 0.15s ease-out;
 }
 
 .distance-label {
-    font-size: 11px;
-    color: #63687b;
-    letter-spacing: 2px;
-    font-weight: bold;
+    font-size: 12px;
+    letter-spacing: 1px;
+    display: block;
 }
 
 #distance-val {
-    font-size: 42px;
-    font-weight: 800;
-    color: var(--accent-color);
-    margin: 5px 0;
-    text-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+    font-size: 38px;
+    font-weight: 900;
+    margin: 5px 0 15px 0;
+    background: var(--accent);
+    display: inline-block;
+    padding: 0 10px;
+    border: 2px solid var(--black);
 }
 
 .hint {
-    color: #63687b;
-    font-size: 12px;
-    line-height: 1.4;
+    font-size: 11px;
+    color: #444;
+    line-height: 1.3;
+    border-top: 1px dashed var(--black);
+    padding-top: 10px;
+    margin-top: 15px;
 }
 
+/* Главная бруталистская кнопка */
 button {
-    background: linear-gradient(135deg, #00ffcc 0%, #007aff 100%);
-    color: #0d0e12;
-    border: none;
-    padding: 18px;
-    font-size: 15px;
-    font-weight: 800;
-    letter-spacing: 1px;
-    border-radius: 16px;
+    background: var(--accent);
+    color: var(--black);
+    border: 3px solid var(--black);
+    box-shadow: var(--shadow);
+    padding: 16px;
+    font-size: 14px;
+    font-weight: 900;
+    font-family: inherit;
     width: 100%;
     cursor: pointer;
-    box-shadow: 0 5px 15px rgba(0, 255, 204, 0.2);
+    transition: all 0.1s ease;
 }
 
+/* Эффект физического нажатия кнопки вглубь своей тени */
 button:active {
-    transform: scale(0.98);
+    transform: translate(4px, 4px);
+    box-shadow: 2px 2px 0px var(--black);
 }
 
-/* Экран успеха */
+/* Экран триумфа */
 .success-card {
-    border-color: var(--success-color);
-    box-shadow: 0 0 30px rgba(57, 255, 20, 0.15);
+    background: var(--white);
+    border-color: var(--black);
 }
 
 .badge {
-    background-color: var(--success-color);
-    color: #0d0e12;
+    background-color: var(--success);
+    color: var(--black);
+    border: 2px solid var(--black);
     font-weight: 900;
-    font-size: 11px;
-    letter-spacing: 1px;
-    padding: 6px 14px;
-    border-radius: 30px;
+    font-size: 12px;
+    padding: 6px 12px;
     display: inline-block;
     margin-bottom: 15px;
 }
 
+#venue-name {
+    font-size: 24px;
+    margin: 0 0 15px 0;
+    text-transform: uppercase;
+}
+
 .venue-image-placeholder {
     width: 100%;
-    height: 140px;
-    background-color: #1a1d29;
-    border-radius: 16px;
+    height: 120px;
+    background-color: var(--bg-color);
+    border: 2px dashed var(--black);
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 20px;
-    border: 1px dashed #242736;
 }
 
 .lock-icon {
-    font-size: 32px;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+    font-size: 36px;
 }
 
 .recommendation-box {
-    background-color: #1a1d29;
+    background-color: var(--bg-color);
     padding: 15px;
-    border-radius: 14px;
-    text-align: left;
-    border-left: 4px solid var(--accent-color);
+    border: 2px solid var(--black);
 }
 
 .recommendation-box h4 {
     margin: 0 0 5px 0;
     font-size: 12px;
-    color: var(--accent-color);
-    letter-spacing: 1px;
+    color: #000;
+    text-decoration: underline;
+}
+
+.recommendation-box p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.4;
 }
 
 .achievement-text {
-    color: var(--success-color);
-    font-size: 12px;
+    font-size: 11px;
     margin-top: 15px;
+    color: #555;
 }
 
-/* Скрытие элементов */
+/* Вспомогательные классы */
 .hidden { display: none !important; }
 
-/* Кастомные стили для пасхалки */
+/* Логика читов */
 .cheat-hidden { display: none; }
 .cheat-visible {
     display: block;
-    background: #5856d6;
+    background: #FF5722; /* Огненно-рыжий для чит-кнопок */
     color: white;
     margin-top: 15px;
-    box-shadow: none;
-    font-size: 12px;
-    padding: 10px;
+    font-size: 11px;
+    padding: 8px;
 }
