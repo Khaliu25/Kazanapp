@@ -136,8 +136,11 @@ button {
     width: 100%;
     cursor: pointer;
     transition: all 0.1s ease;
-}
 
+    /* НОВЫЕ СТРОЧКИ ДЛЯ SAFARI / TELEGRAM MIN APP */
+    -webkit-tap-highlight-color: transparent; /* Полностью убирает уродливую серую вспышку Apple */
+    touch-action: manipulation;               /* Запрещает случайный двойной зум при быстром клике */
+}
 /* Эффект физического нажатия кнопки вглубь своей тени */
 button:active {
     transform: translate(4px, 4px);
